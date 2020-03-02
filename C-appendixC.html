@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Foreword | Statistical Inference via Data Science</title>
+  <title>C Tips and Tricks | Statistical Inference via Data Science</title>
   <meta name="description" content="An open-source and fully-reproducible electronic textbook for teaching statistical inference using tidyverse data science tools." />
   <meta name="generator" content="bookdown 0.17.2 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Foreword | Statistical Inference via Data Science" />
+  <meta property="og:title" content="C Tips and Tricks | Statistical Inference via Data Science" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://moderndive.com/" />
   <meta property="og:image" content="https://moderndive.com/images/logos/book_cover.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="moderndive/ModernDive_book" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Foreword | Statistical Inference via Data Science" />
+  <meta name="twitter:title" content="C Tips and Tricks | Statistical Inference via Data Science" />
   <meta name="twitter:site" content="@ModernDive" />
   <meta name="twitter:description" content="An open-source and fully-reproducible electronic textbook for teaching statistical inference using tidyverse data science tools." />
   <meta name="twitter:image" content="https://moderndive.com/images/logos/book_cover.png" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
   <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="index.html"/>
-<link rel="next" href="preface.html"/>
+<link rel="prev" href="B-appendixB.html"/>
+<link rel="next" href="D-appendixD.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -592,25 +592,445 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <html>
 <img src='https://moderndive.com/wide_format.png' alt="ModernDive">
 </html>
-<div id="foreword" class="section level1 unnumbered">
-<h1>Foreword</h1>
+<div id="appendixC" class="section level1">
+<h1><span class="header-section-number">C</span> Tips and Tricks</h1>
+<div id="needed-packages-11" class="section level2 unnumbered">
+<h2>Needed packages</h2>
+<p>Let’s load all the packages needed for this chapter (this assumes you’ve already installed them). Recall from our discussion in Section <a href="4-tidy.html#tidyverse-package">4.4</a> that loading the <code>tidyverse</code> package by running <code>library(tidyverse)</code> loads the following commonly used data science packages all at once:</p>
+<ul>
+<li><code>ggplot2</code> for data visualization</li>
+<li><code>dplyr</code> for data wrangling</li>
+<li><code>tidyr</code> for converting data to “tidy” format</li>
+<li><code>readr</code> for importing spreadsheet data into R</li>
+<li>As well as the more advanced <code>purrr</code>, <code>tibble</code>, <code>stringr</code>, and <code>forcats</code> packages</li>
+</ul>
+<p>If needed, read Section <a href="1-getting-started.html#packages">1.3</a> for information on how to install and load R packages.</p>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb573-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb573-2" data-line-number="2"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb573-3" data-line-number="3"><span class="kw">library</span>(janitor)</a>
+<a class="sourceLine" id="cb573-4" data-line-number="4"><span class="kw">library</span>(dygraphs)</a>
+<a class="sourceLine" id="cb573-5" data-line-number="5"><span class="kw">library</span>(nycflights13)</a></code></pre></div>
+</div>
+<div id="data-wrangling" class="section level2">
+<h2><span class="header-section-number">C.1</span> Data wrangling</h2>
+<blockquote>
+<p>Shout out to <a href="https://www.scsparkscience.org/fellow/jennifer-smetzer/">Dr. Jenny Smetzer</a> for her work setting this up!</p>
+</blockquote>
+<p><img src="images/data_ninja1.png" style="width:30.0%" /></p>
+<p>Let’s load an example movies dataset, pare down the rows and columns a bit, and then show the first 10 rows using <code>slice()</code>.</p>
+<div class="sourceCode" id="cb574"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb574-1" data-line-number="1">movies_ex &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://moderndive.com/data/movies.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb574-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;action&quot;</span>, <span class="st">&quot;comedy&quot;</span>, <span class="st">&quot;drama&quot;</span>, <span class="st">&quot;animated&quot;</span>, <span class="st">&quot;fantasy&quot;</span>, <span class="st">&quot;rom comedy&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb574-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>over200)</a>
+<a class="sourceLine" id="cb574-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb574-5" data-line-number="5">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb574-6" data-line-number="6"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 5
+   name               score rating type        millions
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;
+ 1 2 Fast 2 Furious 48.9000 PG-13  action      NA      
+ 2 A Guy Thing      39.5    PG-13  rom comedy  15.545  
+ 3 A Man Apart      42.9000 R      action      26.2480 
+ 4 A Mighty Wind    79.9000 PG-13  comedy      17.781  
+ 5 Agent Cody Banks 57.9000 PG     action      47.8110 
+ 6 Alex &amp; Emma      35.1000 PG-13  rom comedy  14.219  
+ 7 American Wedding 50.7000 R      comedy     104.441  
+ 8 Anger Management 62.6000 PG-13  comedy     134.404  
+ 9 Anything Else    63.3000 R      rom comedy   3.21200
+10 Bad Boys II      38.1000 R      action     138.397  </code></pre>
+<div id="dealing-with-missing-values" class="section level3">
+<h3><span class="header-section-number">C.1.1</span> Dealing with missing values</h3>
+<p>You see the revenue in <code>million</code>s value for the movie “2 Fast 2 Furious” is <code>NA</code> (missing). So the following occurs when computing the median revenue:</p>
+<div class="sourceCode" id="cb576"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb576-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb576-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_profit =</span> <span class="kw">median</span>(millions))</a></code></pre></div>
+<pre><code># A tibble: 1 x 1
+  mean_profit
+        &lt;dbl&gt;
+1          NA</code></pre>
+<p>You should always think about why a data value might be missing and what that missingness may mean. For example, imagine you are conducting a study on the effects of smoking on lung cancer and a lot of your patients’ data is missing because they died of lung cancer. If you just “sweep these patients under the rug” and ignore them, you are clearly biasing the results.</p>
+<p>While there are statistical methods to deal with missing data they are beyond the reach of this class. The easiest thing to do is to remove all missing cases, but <strong>you should always at the very least report to the reader if you do so, as by removing the missing values you may be biasing your results.</strong></p>
+<p>You can do this with a <code>na.rm = TRUE</code> argument like so:</p>
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb578-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb578-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_profit =</span> <span class="kw">median</span>(millions, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<pre><code># A tibble: 1 x 1
+  mean_profit
+        &lt;dbl&gt;
+1     43.4270</code></pre>
+<p>If you decide you want to remove the row with the missing data, you can use the filter function like so:</p>
+<div class="sourceCode" id="cb580"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb580-1" data-line-number="1">movies_no_missing &lt;-<span class="st"> </span>movies_ex <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb580-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(millions))</a>
+<a class="sourceLine" id="cb580-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb580-4" data-line-number="4">movies_no_missing <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb580-5" data-line-number="5"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 5
+   name               score rating type        millions
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;
+ 1 A Guy Thing      39.5    PG-13  rom comedy  15.545  
+ 2 A Man Apart      42.9000 R      action      26.2480 
+ 3 A Mighty Wind    79.9000 PG-13  comedy      17.781  
+ 4 Agent Cody Banks 57.9000 PG     action      47.8110 
+ 5 Alex &amp; Emma      35.1000 PG-13  rom comedy  14.219  
+ 6 American Wedding 50.7000 R      comedy     104.441  
+ 7 Anger Management 62.6000 PG-13  comedy     134.404  
+ 8 Anything Else    63.3000 R      rom comedy   3.21200
+ 9 Bad Boys II      38.1000 R      action     138.397  
+10 Bad Santa        75.8000 R      comedy      59.5230 </code></pre>
+<p>We see “2 Fast 2 Furious” is now gone.</p>
+</div>
+<div id="reordering-bars-in-a-barplot" class="section level3">
+<h3><span class="header-section-number">C.1.2</span> Reordering bars in a barplot</h3>
+<p>Let’s compute the total revenue for each movie type and plot a barplot.</p>
+<div class="sourceCode" id="cb582"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb582-1" data-line-number="1">revenue_by_type &lt;-<span class="st"> </span>movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb582-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(type) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb582-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total_revenue =</span> <span class="kw">sum</span>(millions))</a>
+<a class="sourceLine" id="cb582-4" data-line-number="4">revenue_by_type</a></code></pre></div>
+<pre><code># A tibble: 6 x 2
+  type       total_revenue
+  &lt;chr&gt;              &lt;dbl&gt;
+1 action            NA    
+2 animated         561.306
+3 comedy          2286.81 
+4 drama            840.038
+5 fantasy          508.580
+6 rom comedy       492.282</code></pre>
+<div class="sourceCode" id="cb584"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb584-1" data-line-number="1"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb584-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb584-3" data-line-number="3"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span>)</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-549-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p>Say we want to reorder the categorical variable <code>type</code> so that the bars show in a different order. We can reorder the bars by manually defining the order of the <code>levels</code> in the <code>factor()</code> command:</p>
+<div class="sourceCode" id="cb585"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb585-1" data-line-number="1">type_levels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rom comedy&quot;</span>, <span class="st">&quot;action&quot;</span>, <span class="st">&quot;drama&quot;</span>, <span class="st">&quot;animated&quot;</span>, <span class="st">&quot;comedy&quot;</span>, <span class="st">&quot;fantasy&quot;</span>)</a>
+<a class="sourceLine" id="cb585-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb585-3" data-line-number="3">revenue_by_type &lt;-<span class="st"> </span>revenue_by_type <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb585-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">factor</span>(type, <span class="dt">levels =</span> type_levels))</a>
+<a class="sourceLine" id="cb585-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb585-6" data-line-number="6"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb585-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb585-8" data-line-number="8"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span>)</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-550-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p>Or if you want to reorder <code>type</code> in ascending order of <code>total_revenue</code>, we use <code>reorder()</code></p>
+<div class="sourceCode" id="cb586"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb586-1" data-line-number="1">revenue_by_type &lt;-<span class="st"> </span>revenue_by_type <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb586-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">reorder</span>(type, total_revenue))</a>
+<a class="sourceLine" id="cb586-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb586-4" data-line-number="4"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb586-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb586-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb586-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span></a>
+<a class="sourceLine" id="cb586-8" data-line-number="8">  )</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-551-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p>Or if you want to reorder <code>type</code> in descending order of <code>total_revenue</code>, just put
+a <code>-</code> sign in front of <code>-total_revenue</code> in <code>reorder()</code>:</p>
+<div class="sourceCode" id="cb587"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb587-1" data-line-number="1">revenue_by_type &lt;-<span class="st"> </span>revenue_by_type <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb587-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">reorder</span>(type, <span class="op">-</span>total_revenue))</a>
+<a class="sourceLine" id="cb587-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb587-4" data-line-number="4"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb587-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb587-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb587-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span></a>
+<a class="sourceLine" id="cb587-8" data-line-number="8">  )</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-552-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p>For more advanced categorical variable (i.e. factor) manipulations, check out
+the <a href="https://forcats.tidyverse.org/" target="_blank"><code>forcats</code> package</a>. Note: <code>forcats</code> is an anagram of <code>factors</code></p>
+<p><img src="https://github.com/tidyverse/forcats/raw/master/man/figures/logo.png" style="width:20.0%" /></p>
+</div>
+<div id="showing-money-on-an-axis" class="section level3">
+<h3><span class="header-section-number">C.1.3</span> Showing money on an axis</h3>
+<div class="sourceCode" id="cb588"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb588-1" data-line-number="1">movies_ex &lt;-<span class="st"> </span>movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb588-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">revenue =</span> millions <span class="op">*</span><span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb588-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb588-4" data-line-number="4"><span class="kw">ggplot</span>(<span class="dt">data =</span> movies_ex, <span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> revenue)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb588-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb588-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;rating&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Revenue in $&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;Profits for different movie ratings&quot;</span>)</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-553-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p>Google “ggplot2 axis scale dollars” and click on the <a href="http://www.sthda.com/english/wiki/ggplot2-axis-scales-and-transformations">first link</a> and search for the word “dollars”. You’ll find:</p>
+<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb589-1" data-line-number="1"><span class="co"># Don&#39;t forget to load the scales package first!</span></a>
+<a class="sourceLine" id="cb589-2" data-line-number="2"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb589-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb589-4" data-line-number="4"><span class="kw">ggplot</span>(<span class="dt">data =</span> movies_ex, <span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> revenue)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb589-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb589-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;rating&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Revenue in $&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;Profits for different movie ratings&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb589-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> dollar)</a></code></pre></div>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-554-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+</div>
+<div id="changing-values-inside-cells" class="section level3">
+<h3><span class="header-section-number">C.1.4</span> Changing values inside cells</h3>
+<p><code>dplyr::rename()</code> renames column/variable names. To “rename” values inside cells of a particular column, you need to <code>mutate()</code> the column using one of the three functions below. There might be other ones too, but these are the three we’ve seen the most. In these examples, we’ll change values in the variable <code>type</code>.</p>
+<ol style="list-style-type: decimal">
+<li><code>if_else()</code></li>
+<li><code>recode()</code></li>
+<li><code>case_when()</code></li>
+</ol>
+<div id="if_else" class="section level4 unnumbered">
+<h4><code>if_else()</code></h4>
+<p>Switch all instances of <code>rom comedy</code> with <code>romantic comedy</code> using <code>if_else()</code> from the <code>dplyr</code> package. If a particular row has <code>type == &quot;rom comedy&quot;</code>, then return <code>&quot;romantic comedy&quot;</code>, else return whatever was originally in <code>type</code>. Save everything in a new variable <code>type_new</code>:</p>
+<div class="sourceCode" id="cb590"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb590-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb590-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type_new =</span> <span class="kw">if_else</span>(type <span class="op">==</span><span class="st"> &quot;rom comedy&quot;</span>, <span class="st">&quot;romantic comedy&quot;</span>, type)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb590-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 7
+   name               score rating type       millions    revenue type_new      
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;         
+ 1 2 Fast 2 Furious 48.9000 PG-13  action     NA              NA  action        
+ 2 A Guy Thing      39.5    PG-13  rom come…  15.545    15545000  romantic come…
+ 3 A Man Apart      42.9000 R      action     26.2480   26247999  action        
+ 4 A Mighty Wind    79.9000 PG-13  comedy     17.781    17781000  comedy        
+ 5 Agent Cody Banks 57.9000 PG     action     47.8110   47811001  action        
+ 6 Alex &amp; Emma      35.1000 PG-13  rom come…  14.219    14219000  romantic come…
+ 7 American Wedding 50.7000 R      comedy    104.441   104441000  comedy        
+ 8 Anger Management 62.6000 PG-13  comedy    134.404   134404010  comedy        
+ 9 Anything Else    63.3000 R      rom come…   3.21200   3212000. romantic come…
+10 Bad Boys II      38.1000 R      action    138.397   138397000  action        </code></pre>
+<p>Do the same here, but return <code>&quot;not romantic comedy&quot;</code> if <code>type</code> is not <code>&quot;rom comedy&quot;</code> and this time overwrite the original <code>type</code> variable</p>
+<div class="sourceCode" id="cb592"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb592-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb592-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">if_else</span>(type <span class="op">==</span><span class="st"> &quot;rom comedy&quot;</span>, <span class="st">&quot;romantic comedy&quot;</span>, <span class="st">&quot;not romantic comedy&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb592-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 6
+   name               score rating type                 millions    revenue
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2 Fast 2 Furious 48.9000 PG-13  not romantic comedy  NA              NA 
+ 2 A Guy Thing      39.5    PG-13  romantic comedy      15.545    15545000 
+ 3 A Man Apart      42.9000 R      not romantic comedy  26.2480   26247999 
+ 4 A Mighty Wind    79.9000 PG-13  not romantic comedy  17.781    17781000 
+ 5 Agent Cody Banks 57.9000 PG     not romantic comedy  47.8110   47811001 
+ 6 Alex &amp; Emma      35.1000 PG-13  romantic comedy      14.219    14219000 
+ 7 American Wedding 50.7000 R      not romantic comedy 104.441   104441000 
+ 8 Anger Management 62.6000 PG-13  not romantic comedy 134.404   134404010 
+ 9 Anything Else    63.3000 R      romantic comedy       3.21200   3212000.
+10 Bad Boys II      38.1000 R      not romantic comedy 138.397   138397000 </code></pre>
+</div>
+<div id="recode" class="section level4 unnumbered">
+<h4><code>recode()</code></h4>
+<p><code>if_else()</code> is rather limited however. What if we want to “rename” all <code>type</code> so that they start with uppercase? Use <code>recode()</code>:</p>
+<div class="sourceCode" id="cb594"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb594-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb594-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type_new =</span> <span class="kw">recode</span>(type, </a>
+<a class="sourceLine" id="cb594-3" data-line-number="3">                           <span class="st">&quot;action&quot;</span> =<span class="st"> &quot;Action&quot;</span>,</a>
+<a class="sourceLine" id="cb594-4" data-line-number="4">                           <span class="st">&quot;animated&quot;</span> =<span class="st"> &quot;Animated&quot;</span>,</a>
+<a class="sourceLine" id="cb594-5" data-line-number="5">                           <span class="st">&quot;comedy&quot;</span> =<span class="st"> &quot;Comedy&quot;</span>,</a>
+<a class="sourceLine" id="cb594-6" data-line-number="6">                           <span class="st">&quot;drama&quot;</span> =<span class="st"> &quot;Drama&quot;</span>,</a>
+<a class="sourceLine" id="cb594-7" data-line-number="7">                           <span class="st">&quot;fantasy&quot;</span> =<span class="st"> &quot;Fantasy&quot;</span>,</a>
+<a class="sourceLine" id="cb594-8" data-line-number="8">                           <span class="st">&quot;rom comedy&quot;</span> =<span class="st"> &quot;Romantic Comedy&quot;</span></a>
+<a class="sourceLine" id="cb594-9" data-line-number="9">  )) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb594-10" data-line-number="10"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 7
+   name               score rating type       millions    revenue type_new      
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;         
+ 1 2 Fast 2 Furious 48.9000 PG-13  action     NA              NA  Action        
+ 2 A Guy Thing      39.5    PG-13  rom come…  15.545    15545000  Romantic Come…
+ 3 A Man Apart      42.9000 R      action     26.2480   26247999  Action        
+ 4 A Mighty Wind    79.9000 PG-13  comedy     17.781    17781000  Comedy        
+ 5 Agent Cody Banks 57.9000 PG     action     47.8110   47811001  Action        
+ 6 Alex &amp; Emma      35.1000 PG-13  rom come…  14.219    14219000  Romantic Come…
+ 7 American Wedding 50.7000 R      comedy    104.441   104441000  Comedy        
+ 8 Anger Management 62.6000 PG-13  comedy    134.404   134404010  Comedy        
+ 9 Anything Else    63.3000 R      rom come…   3.21200   3212000. Romantic Come…
+10 Bad Boys II      38.1000 R      action    138.397   138397000  Action        </code></pre>
+</div>
+<div id="case_when" class="section level4 unnumbered">
+<h4><code>case_when()</code></h4>
+<p><code>case_when()</code> is a little trickier, but allows you to evaluate boolean operations using <code>==</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&amp;</code>, <code>|</code>, etc:</p>
+<div class="sourceCode" id="cb596"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb596-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb596-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type_new =</span> </a>
+<a class="sourceLine" id="cb596-3" data-line-number="3">           <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb596-4" data-line-number="4">             type <span class="op">==</span><span class="st"> &quot;action&quot;</span> <span class="op">&amp;</span><span class="st"> </span>millions <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span> <span class="op">~</span><span class="st"> &quot;Big budget action&quot;</span>,</a>
+<a class="sourceLine" id="cb596-5" data-line-number="5">             type <span class="op">==</span><span class="st"> &quot;rom comedy&quot;</span> <span class="op">&amp;</span><span class="st"> </span>millions <span class="op">&lt;</span><span class="st"> </span><span class="dv">40</span> <span class="op">~</span><span class="st"> &quot;Small budget romcom&quot;</span>,</a>
+<a class="sourceLine" id="cb596-6" data-line-number="6">             <span class="co"># Need this for everything else that aren&#39;t the two cases above:</span></a>
+<a class="sourceLine" id="cb596-7" data-line-number="7">             <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;Rest&quot;</span></a>
+<a class="sourceLine" id="cb596-8" data-line-number="8">           ))</a></code></pre></div>
+<pre><code># A tibble: 108 x 7
+   name             score rating type       millions    revenue type_new        
+   &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;           
+ 1 2 Fast 2 Furi… 48.9000 PG-13  action     NA              NA  Rest            
+ 2 A Guy Thing    39.5    PG-13  rom come…  15.545    15545000  Small budget ro…
+ 3 A Man Apart    42.9000 R      action     26.2480   26247999  Rest            
+ 4 A Mighty Wind  79.9000 PG-13  comedy     17.781    17781000  Rest            
+ 5 Agent Cody Ba… 57.9000 PG     action     47.8110   47811001  Big budget acti…
+ 6 Alex &amp; Emma    35.1000 PG-13  rom come…  14.219    14219000  Small budget ro…
+ 7 American Wedd… 50.7000 R      comedy    104.441   104441000  Rest            
+ 8 Anger Managem… 62.6000 PG-13  comedy    134.404   134404010  Rest            
+ 9 Anything Else  63.3000 R      rom come…   3.21200   3212000. Small budget ro…
+10 Bad Boys II    38.1000 R      action    138.397   138397000  Big budget acti…
+# … with 98 more rows</code></pre>
+</div>
+</div>
+<div id="converting-a-numerical-variable-to-a-categorical-one" class="section level3">
+<h3><span class="header-section-number">C.1.5</span> Converting a numerical variable to a categorical one</h3>
+<p>Sometimes we want to turn a numerical, continuous variable into a categorical variable. For instance, what if we wanted to have a variable that tells us if a movie made one hundred million dollars or more. That is to say, we can create a binary variable, which is the same thing as a categorical variable with 2 levels. We can again use the <code>mutate()</code> function:</p>
+<div class="sourceCode" id="cb598"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb598-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb598-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">big_budget =</span> millions <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb598-3" data-line-number="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 7
+   name               score rating type        millions    revenue big_budget
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt; &lt;lgl&gt;     
+ 1 2 Fast 2 Furious 48.9000 PG-13  action      NA              NA  NA        
+ 2 A Guy Thing      39.5    PG-13  rom comedy  15.545    15545000  FALSE     
+ 3 A Man Apart      42.9000 R      action      26.2480   26247999  FALSE     
+ 4 A Mighty Wind    79.9000 PG-13  comedy      17.781    17781000  FALSE     
+ 5 Agent Cody Banks 57.9000 PG     action      47.8110   47811001  FALSE     
+ 6 Alex &amp; Emma      35.1000 PG-13  rom comedy  14.219    14219000  FALSE     
+ 7 American Wedding 50.7000 R      comedy     104.441   104441000  TRUE      
+ 8 Anger Management 62.6000 PG-13  comedy     134.404   134404010  TRUE      
+ 9 Anything Else    63.3000 R      rom comedy   3.21200   3212000. FALSE     
+10 Bad Boys II      38.1000 R      action     138.397   138397000  TRUE      </code></pre>
+<p>What if you want to convert a numerical variable into a categorical variable with more than 2 levels? One way is to use the <code>cut()</code> command. For instance, below, we <code>cut()</code> the <code>score</code> variable, to recode it into 4 categories:</p>
+<ol style="list-style-type: decimal">
+<li>0 - 40 = bad</li>
+<li>40.1 - 60 = so-so</li>
+<li>60.1 - 80 = good</li>
+<li>80.1+ = great</li>
+</ol>
+<p>We set the breaking points for cutting the numerical variable with the <code>c(0, 40, 60, 80, 100)</code> part, and set the labels for each of these bins with the <code>labels = c(&quot;bad&quot;, &quot;so-so&quot;, &quot;good&quot;, &quot;great&quot;)</code> part. All this action happens inside the <code>mutate()</code> command, so the new categorical variable <code>score_categ</code> is added to the data frame.</p>
+<div class="sourceCode" id="cb600"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb600-1" data-line-number="1">movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb600-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">score_categ =</span> <span class="kw">cut</span>(score, </a>
+<a class="sourceLine" id="cb600-3" data-line-number="3">                           <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">100</span>),</a>
+<a class="sourceLine" id="cb600-4" data-line-number="4">                           <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;bad&quot;</span>, <span class="st">&quot;so-so&quot;</span>, <span class="st">&quot;good&quot;</span>, <span class="st">&quot;great&quot;</span>)</a>
+<a class="sourceLine" id="cb600-5" data-line-number="5">  )) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb600-6" data-line-number="6"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<pre><code># A tibble: 10 x 7
+   name               score rating type        millions    revenue score_categ
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt;      
+ 1 2 Fast 2 Furious 48.9000 PG-13  action      NA              NA  so-so      
+ 2 A Guy Thing      39.5    PG-13  rom comedy  15.545    15545000  bad        
+ 3 A Man Apart      42.9000 R      action      26.2480   26247999  so-so      
+ 4 A Mighty Wind    79.9000 PG-13  comedy      17.781    17781000  good       
+ 5 Agent Cody Banks 57.9000 PG     action      47.8110   47811001  so-so      
+ 6 Alex &amp; Emma      35.1000 PG-13  rom comedy  14.219    14219000  bad        
+ 7 American Wedding 50.7000 R      comedy     104.441   104441000  so-so      
+ 8 Anger Management 62.6000 PG-13  comedy     134.404   134404010  good       
+ 9 Anything Else    63.3000 R      rom comedy   3.21200   3212000. good       
+10 Bad Boys II      38.1000 R      action     138.397   138397000  bad        </code></pre>
+<p>Other options with the <code>cut</code> function:</p>
+<ul>
+<li>By default, if the value is exactly the upper bound of an interval, it’s
+included in the lessor category (e.g. 60.0 is ‘so-so’ not ‘good’), to
+flip this, include the argument <code>right = FALSE</code>.</li>
+<li>You could also have RStudio equally divide the variable into a balanced
+number of groups. For example, specifying <code>breaks = 3</code> would create 4 groups with
+approximately the same number of values in each group.</li>
+</ul>
+</div>
+<div id="prop" class="section level3">
+<h3><span class="header-section-number">C.1.6</span> Computing proportions</h3>
+<p>By using a <code>group_by()</code> followed not by a <code>summarize()</code> as is often the case, but rather a <code>mutate()</code>. So say we compute the total revenue millions for each movie rating and type:</p>
+<div class="sourceCode" id="cb602"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb602-1" data-line-number="1">rating_by_type_millions &lt;-<span class="st"> </span>movies_ex <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb602-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(rating, type) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb602-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">millions =</span> <span class="kw">sum</span>(millions)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb602-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(rating, type)</a>
+<a class="sourceLine" id="cb602-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb602-6" data-line-number="6">rating_by_type_millions</a></code></pre></div>
+<pre><code># A tibble: 15 x 3
+# Groups:   rating [4]
+   rating type        millions
+   &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;
+ 1 G      animated    495.594 
+ 2 PG     action       47.8110
+ 3 PG     animated     65.712 
+ 4 PG     comedy      829.616 
+ 5 PG     drama       160.873 
+ 6 PG     fantasy     147.461 
+ 7 PG-13  action       NA     
+ 8 PG-13  comedy     1208.31  
+ 9 PG-13  drama       306.26  
+10 PG-13  fantasy     361.119 
+11 PG-13  rom comedy  406.251 
+12 R      action     1044.82  
+13 R      comedy      248.876 
+14 R      drama       372.905 
+15 R      rom comedy   86.0310</code></pre>
+<p>Say within each movie rating (G, PG, PG-13, R), we want to know the proportion of <code>total_millions</code> that made by each movie type (animated, action, comedy, etc). We can:</p>
+<div class="sourceCode" id="cb604"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb604-1" data-line-number="1">rating_by_type_millions <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb604-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(rating) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb604-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb604-4" data-line-number="4">    <span class="co"># Compute a new column of the sum of millions split by rating:</span></a>
+<a class="sourceLine" id="cb604-5" data-line-number="5">    <span class="dt">total_millions =</span> <span class="kw">sum</span>(millions),</a>
+<a class="sourceLine" id="cb604-6" data-line-number="6">    <span class="co"># Compute the proportion within each rating:</span></a>
+<a class="sourceLine" id="cb604-7" data-line-number="7">    <span class="dt">prop =</span> millions<span class="op">/</span>total_millions</a>
+<a class="sourceLine" id="cb604-8" data-line-number="8">  )</a></code></pre></div>
+<pre><code># A tibble: 15 x 5
+# Groups:   rating [4]
+   rating type        millions total_millions       prop
+   &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;
+ 1 G      animated    495.594         495.594  1        
+ 2 PG     action       47.8110       1251.47   0.0382038
+ 3 PG     animated     65.712        1251.47   0.0525077
+ 4 PG     comedy      829.616        1251.47   0.662912 
+ 5 PG     drama       160.873        1251.47   0.128547 
+ 6 PG     fantasy     147.461        1251.47   0.117830 
+ 7 PG-13  action       NA              NA     NA        
+ 8 PG-13  comedy     1208.31           NA     NA        
+ 9 PG-13  drama       306.26           NA     NA        
+10 PG-13  fantasy     361.119          NA     NA        
+11 PG-13  rom comedy  406.251          NA     NA        
+12 R      action     1044.82         1752.63   0.596143 
+13 R      comedy      248.876        1752.63   0.142001 
+14 R      drama       372.905        1752.63   0.212769 
+15 R      rom comedy   86.0310       1752.63   0.0490868</code></pre>
+<p>So for example, the 4 proportions corresponding to R rated movies are 0.596 + 0.142 + 0.213 + 0.0491 = 1.</p>
+</div>
+<div id="numerical" class="section level3">
+<h3><span class="header-section-number">C.1.7</span> Dealing with %, commas, and $</h3>
+<p>Say you have numerical data that are recorded as percentages, have commas, or are in dollar form and hence are character strings. How do you convert these to numerical values? Using <code>readr::parse_number()</code> inside a <code>mutate()</code>! Shout out to <a href="https://stackoverflow.com/a/52965808/3674500" target="_blank">Stack Overflow</a></p>
+<div class="sourceCode" id="cb606"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb606-1" data-line-number="1"><span class="kw">library</span>(readr)</a>
+<a class="sourceLine" id="cb606-2" data-line-number="2"><span class="kw">parse_number</span>(<span class="st">&quot;10.5%&quot;</span>)</a></code></pre></div>
+<pre><code>[1] 10.5</code></pre>
+<div class="sourceCode" id="cb608"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb608-1" data-line-number="1"><span class="kw">parse_number</span>(<span class="st">&quot;145,897&quot;</span>)</a></code></pre></div>
+<pre><code>[1] 145897</code></pre>
+<div class="sourceCode" id="cb610"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb610-1" data-line-number="1"><span class="kw">parse_number</span>(<span class="st">&quot;$1,234.5&quot;</span>)</a></code></pre></div>
+<pre><code>[1] 1234</code></pre>
+<p>What about the other way around? Use the <code>scales</code> package!</p>
+<div class="sourceCode" id="cb612"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb612-1" data-line-number="1"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb612-2" data-line-number="2"><span class="kw">percent</span>(<span class="fl">0.105</span>)</a></code></pre></div>
+<pre><code>[1] &quot;10%&quot;</code></pre>
+<div class="sourceCode" id="cb614"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb614-1" data-line-number="1"><span class="kw">comma</span>(<span class="dv">145897</span>)</a></code></pre></div>
+<pre><code>[1] &quot;145,897&quot;</code></pre>
+<div class="sourceCode" id="cb616"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb616-1" data-line-number="1"><span class="kw">dollar</span>(<span class="fl">1234.5</span>)</a></code></pre></div>
+<pre><code>[1] &quot;$1,234.50&quot;</code></pre>
+<hr />
+<p><strong>Congratulations. You are now an R Ninja!</strong></p>
+<p><img src="images/Rninja.png" style="width:40.0%" /></p>
+<hr />
+</div>
+</div>
+<div id="interactive-graphics" class="section level2">
+<h2><span class="header-section-number">C.2</span> Interactive graphics</h2>
+<div id="interactive-linegraphs" class="section level3">
+<h3><span class="header-section-number">C.2.1</span> Interactive linegraphs</h3>
+<p>Another useful tool for viewing linegraphs such as this is the <code>dygraph</code> function in the <code>dygraphs</code> package in combination with the <code>dyRangeSelector</code> function. This allows us to zoom in on a selected range and get an interactive plot for us to work with:</p>
+<div class="sourceCode" id="cb618"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb618-1" data-line-number="1"><span class="kw">library</span>(dygraphs)</a>
+<a class="sourceLine" id="cb618-2" data-line-number="2"><span class="kw">library</span>(nycflights13)</a>
+<a class="sourceLine" id="cb618-3" data-line-number="3">flights_day &lt;-<span class="st"> </span><span class="kw">mutate</span>(flights, <span class="dt">date =</span> <span class="kw">as.Date</span>(time_hour))</a>
+<a class="sourceLine" id="cb618-4" data-line-number="4">flights_summarized &lt;-<span class="st"> </span>flights_day <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb618-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb618-6" data-line-number="6"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median_arr_delay =</span> <span class="kw">median</span>(arr_delay, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb618-7" data-line-number="7"><span class="kw">rownames</span>(flights_summarized) &lt;-<span class="st"> </span>flights_summarized<span class="op">$</span>date</a>
+<a class="sourceLine" id="cb618-8" data-line-number="8">flights_summarized &lt;-<span class="st"> </span><span class="kw">select</span>(flights_summarized, <span class="op">-</span>date)</a>
+<a class="sourceLine" id="cb618-9" data-line-number="9"><span class="kw">dyRangeSelector</span>(<span class="kw">dygraph</span>(flights_summarized))</a></code></pre></div>
+<div id="htmlwidget-e4806c1bb1490fee566b" style="width:100%;height:432px;" class="dygraphs html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e4806c1bb1490fee566b">{"x":{"attrs":{"labels":["day","median_arr_delay"],"legend":"auto","retainDateWindow":false,"axes":{"x":{"pixelsPerLabel":60}},"showRangeSelector":true,"rangeSelectorHeight":40,"rangeSelectorPlotFillColor":" #A7B1C4","rangeSelectorPlotStrokeColor":"#808FAB","interactionModel":"Dygraph.Interaction.defaultModel"},"scale":"daily","annotations":[],"shadings":[],"events":[],"format":"date","data":[["2013-01-01T00:00:00.000Z","2013-01-02T00:00:00.000Z","2013-01-03T00:00:00.000Z","2013-01-04T00:00:00.000Z","2013-01-05T00:00:00.000Z","2013-01-06T00:00:00.000Z","2013-01-07T00:00:00.000Z","2013-01-08T00:00:00.000Z","2013-01-09T00:00:00.000Z","2013-01-10T00:00:00.000Z","2013-01-11T00:00:00.000Z","2013-01-12T00:00:00.000Z","2013-01-13T00:00:00.000Z","2013-01-14T00:00:00.000Z","2013-01-15T00:00:00.000Z","2013-01-16T00:00:00.000Z","2013-01-17T00:00:00.000Z","2013-01-18T00:00:00.000Z","2013-01-19T00:00:00.000Z","2013-01-20T00:00:00.000Z","2013-01-21T00:00:00.000Z","2013-01-22T00:00:00.000Z","2013-01-23T00:00:00.000Z","2013-01-24T00:00:00.000Z","2013-01-25T00:00:00.000Z","2013-01-26T00:00:00.000Z","2013-01-27T00:00:00.000Z","2013-01-28T00:00:00.000Z","2013-01-29T00:00:00.000Z","2013-01-30T00:00:00.000Z","2013-01-31T00:00:00.000Z","2013-02-01T00:00:00.000Z","2013-02-02T00:00:00.000Z","2013-02-03T00:00:00.000Z","2013-02-04T00:00:00.000Z","2013-02-05T00:00:00.000Z","2013-02-06T00:00:00.000Z","2013-02-07T00:00:00.000Z","2013-02-08T00:00:00.000Z","2013-02-09T00:00:00.000Z","2013-02-10T00:00:00.000Z","2013-02-11T00:00:00.000Z","2013-02-12T00:00:00.000Z","2013-02-13T00:00:00.000Z","2013-02-14T00:00:00.000Z","2013-02-15T00:00:00.000Z","2013-02-16T00:00:00.000Z","2013-02-17T00:00:00.000Z","2013-02-18T00:00:00.000Z","2013-02-19T00:00:00.000Z","2013-02-20T00:00:00.000Z","2013-02-21T00:00:00.000Z","2013-02-22T00:00:00.000Z","2013-02-23T00:00:00.000Z","2013-02-24T00:00:00.000Z","2013-02-25T00:00:00.000Z","2013-02-26T00:00:00.000Z","2013-02-27T00:00:00.000Z","2013-02-28T00:00:00.000Z","2013-03-01T00:00:00.000Z","2013-03-02T00:00:00.000Z","2013-03-03T00:00:00.000Z","2013-03-04T00:00:00.000Z","2013-03-05T00:00:00.000Z","2013-03-06T00:00:00.000Z","2013-03-07T00:00:00.000Z","2013-03-08T00:00:00.000Z","2013-03-09T00:00:00.000Z","2013-03-10T00:00:00.000Z","2013-03-11T00:00:00.000Z","2013-03-12T00:00:00.000Z","2013-03-13T00:00:00.000Z","2013-03-14T00:00:00.000Z","2013-03-15T00:00:00.000Z","2013-03-16T00:00:00.000Z","2013-03-17T00:00:00.000Z","2013-03-18T00:00:00.000Z","2013-03-19T00:00:00.000Z","2013-03-20T00:00:00.000Z","2013-03-21T00:00:00.000Z","2013-03-22T00:00:00.000Z","2013-03-23T00:00:00.000Z","2013-03-24T00:00:00.000Z","2013-03-25T00:00:00.000Z","2013-03-26T00:00:00.000Z","2013-03-27T00:00:00.000Z","2013-03-28T00:00:00.000Z","2013-03-29T00:00:00.000Z","2013-03-30T00:00:00.000Z","2013-03-31T00:00:00.000Z","2013-04-01T00:00:00.000Z","2013-04-02T00:00:00.000Z","2013-04-03T00:00:00.000Z","2013-04-04T00:00:00.000Z","2013-04-05T00:00:00.000Z","2013-04-06T00:00:00.000Z","2013-04-07T00:00:00.000Z","2013-04-08T00:00:00.000Z","2013-04-09T00:00:00.000Z","2013-04-10T00:00:00.000Z","2013-04-11T00:00:00.000Z","2013-04-12T00:00:00.000Z","2013-04-13T00:00:00.000Z","2013-04-14T00:00:00.000Z","2013-04-15T00:00:00.000Z","2013-04-16T00:00:00.000Z","2013-04-17T00:00:00.000Z","2013-04-18T00:00:00.000Z","2013-04-19T00:00:00.000Z","2013-04-20T00:00:00.000Z","2013-04-21T00:00:00.000Z","2013-04-22T00:00:00.000Z","2013-04-23T00:00:00.000Z","2013-04-24T00:00:00.000Z","2013-04-25T00:00:00.000Z","2013-04-26T00:00:00.000Z","2013-04-27T00:00:00.000Z","2013-04-28T00:00:00.000Z","2013-04-29T00:00:00.000Z","2013-04-30T00:00:00.000Z","2013-05-01T00:00:00.000Z","2013-05-02T00:00:00.000Z","2013-05-03T00:00:00.000Z","2013-05-04T00:00:00.000Z","2013-05-05T00:00:00.000Z","2013-05-06T00:00:00.000Z","2013-05-07T00:00:00.000Z","2013-05-08T00:00:00.000Z","2013-05-09T00:00:00.000Z","2013-05-10T00:00:00.000Z","2013-05-11T00:00:00.000Z","2013-05-12T00:00:00.000Z","2013-05-13T00:00:00.000Z","2013-05-14T00:00:00.000Z","2013-05-15T00:00:00.000Z","2013-05-16T00:00:00.000Z","2013-05-17T00:00:00.000Z","2013-05-18T00:00:00.000Z","2013-05-19T00:00:00.000Z","2013-05-20T00:00:00.000Z","2013-05-21T00:00:00.000Z","2013-05-22T00:00:00.000Z","2013-05-23T00:00:00.000Z","2013-05-24T00:00:00.000Z","2013-05-25T00:00:00.000Z","2013-05-26T00:00:00.000Z","2013-05-27T00:00:00.000Z","2013-05-28T00:00:00.000Z","2013-05-29T00:00:00.000Z","2013-05-30T00:00:00.000Z","2013-05-31T00:00:00.000Z","2013-06-01T00:00:00.000Z","2013-06-02T00:00:00.000Z","2013-06-03T00:00:00.000Z","2013-06-04T00:00:00.000Z","2013-06-05T00:00:00.000Z","2013-06-06T00:00:00.000Z","2013-06-07T00:00:00.000Z","2013-06-08T00:00:00.000Z","2013-06-09T00:00:00.000Z","2013-06-10T00:00:00.000Z","2013-06-11T00:00:00.000Z","2013-06-12T00:00:00.000Z","2013-06-13T00:00:00.000Z","2013-06-14T00:00:00.000Z","2013-06-15T00:00:00.000Z","2013-06-16T00:00:00.000Z","2013-06-17T00:00:00.000Z","2013-06-18T00:00:00.000Z","2013-06-19T00:00:00.000Z","2013-06-20T00:00:00.000Z","2013-06-21T00:00:00.000Z","2013-06-22T00:00:00.000Z","2013-06-23T00:00:00.000Z","2013-06-24T00:00:00.000Z","2013-06-25T00:00:00.000Z","2013-06-26T00:00:00.000Z","2013-06-27T00:00:00.000Z","2013-06-28T00:00:00.000Z","2013-06-29T00:00:00.000Z","2013-06-30T00:00:00.000Z","2013-07-01T00:00:00.000Z","2013-07-02T00:00:00.000Z","2013-07-03T00:00:00.000Z","2013-07-04T00:00:00.000Z","2013-07-05T00:00:00.000Z","2013-07-06T00:00:00.000Z","2013-07-07T00:00:00.000Z","2013-07-08T00:00:00.000Z","2013-07-09T00:00:00.000Z","2013-07-10T00:00:00.000Z","2013-07-11T00:00:00.000Z","2013-07-12T00:00:00.000Z","2013-07-13T00:00:00.000Z","2013-07-14T00:00:00.000Z","2013-07-15T00:00:00.000Z","2013-07-16T00:00:00.000Z","2013-07-17T00:00:00.000Z","2013-07-18T00:00:00.000Z","2013-07-19T00:00:00.000Z","2013-07-20T00:00:00.000Z","2013-07-21T00:00:00.000Z","2013-07-22T00:00:00.000Z","2013-07-23T00:00:00.000Z","2013-07-24T00:00:00.000Z","2013-07-25T00:00:00.000Z","2013-07-26T00:00:00.000Z","2013-07-27T00:00:00.000Z","2013-07-28T00:00:00.000Z","2013-07-29T00:00:00.000Z","2013-07-30T00:00:00.000Z","2013-07-31T00:00:00.000Z","2013-08-01T00:00:00.000Z","2013-08-02T00:00:00.000Z","2013-08-03T00:00:00.000Z","2013-08-04T00:00:00.000Z","2013-08-05T00:00:00.000Z","2013-08-06T00:00:00.000Z","2013-08-07T00:00:00.000Z","2013-08-08T00:00:00.000Z","2013-08-09T00:00:00.000Z","2013-08-10T00:00:00.000Z","2013-08-11T00:00:00.000Z","2013-08-12T00:00:00.000Z","2013-08-13T00:00:00.000Z","2013-08-14T00:00:00.000Z","2013-08-15T00:00:00.000Z","2013-08-16T00:00:00.000Z","2013-08-17T00:00:00.000Z","2013-08-18T00:00:00.000Z","2013-08-19T00:00:00.000Z","2013-08-20T00:00:00.000Z","2013-08-21T00:00:00.000Z","2013-08-22T00:00:00.000Z","2013-08-23T00:00:00.000Z","2013-08-24T00:00:00.000Z","2013-08-25T00:00:00.000Z","2013-08-26T00:00:00.000Z","2013-08-27T00:00:00.000Z","2013-08-28T00:00:00.000Z","2013-08-29T00:00:00.000Z","2013-08-30T00:00:00.000Z","2013-08-31T00:00:00.000Z","2013-09-01T00:00:00.000Z","2013-09-02T00:00:00.000Z","2013-09-03T00:00:00.000Z","2013-09-04T00:00:00.000Z","2013-09-05T00:00:00.000Z","2013-09-06T00:00:00.000Z","2013-09-07T00:00:00.000Z","2013-09-08T00:00:00.000Z","2013-09-09T00:00:00.000Z","2013-09-10T00:00:00.000Z","2013-09-11T00:00:00.000Z","2013-09-12T00:00:00.000Z","2013-09-13T00:00:00.000Z","2013-09-14T00:00:00.000Z","2013-09-15T00:00:00.000Z","2013-09-16T00:00:00.000Z","2013-09-17T00:00:00.000Z","2013-09-18T00:00:00.000Z","2013-09-19T00:00:00.000Z","2013-09-20T00:00:00.000Z","2013-09-21T00:00:00.000Z","2013-09-22T00:00:00.000Z","2013-09-23T00:00:00.000Z","2013-09-24T00:00:00.000Z","2013-09-25T00:00:00.000Z","2013-09-26T00:00:00.000Z","2013-09-27T00:00:00.000Z","2013-09-28T00:00:00.000Z","2013-09-29T00:00:00.000Z","2013-09-30T00:00:00.000Z","2013-10-01T00:00:00.000Z","2013-10-02T00:00:00.000Z","2013-10-03T00:00:00.000Z","2013-10-04T00:00:00.000Z","2013-10-05T00:00:00.000Z","2013-10-06T00:00:00.000Z","2013-10-07T00:00:00.000Z","2013-10-08T00:00:00.000Z","2013-10-09T00:00:00.000Z","2013-10-10T00:00:00.000Z","2013-10-11T00:00:00.000Z","2013-10-12T00:00:00.000Z","2013-10-13T00:00:00.000Z","2013-10-14T00:00:00.000Z","2013-10-15T00:00:00.000Z","2013-10-16T00:00:00.000Z","2013-10-17T00:00:00.000Z","2013-10-18T00:00:00.000Z","2013-10-19T00:00:00.000Z","2013-10-20T00:00:00.000Z","2013-10-21T00:00:00.000Z","2013-10-22T00:00:00.000Z","2013-10-23T00:00:00.000Z","2013-10-24T00:00:00.000Z","2013-10-25T00:00:00.000Z","2013-10-26T00:00:00.000Z","2013-10-27T00:00:00.000Z","2013-10-28T00:00:00.000Z","2013-10-29T00:00:00.000Z","2013-10-30T00:00:00.000Z","2013-10-31T00:00:00.000Z","2013-11-01T00:00:00.000Z","2013-11-02T00:00:00.000Z","2013-11-03T00:00:00.000Z","2013-11-04T00:00:00.000Z","2013-11-05T00:00:00.000Z","2013-11-06T00:00:00.000Z","2013-11-07T00:00:00.000Z","2013-11-08T00:00:00.000Z","2013-11-09T00:00:00.000Z","2013-11-10T00:00:00.000Z","2013-11-11T00:00:00.000Z","2013-11-12T00:00:00.000Z","2013-11-13T00:00:00.000Z","2013-11-14T00:00:00.000Z","2013-11-15T00:00:00.000Z","2013-11-16T00:00:00.000Z","2013-11-17T00:00:00.000Z","2013-11-18T00:00:00.000Z","2013-11-19T00:00:00.000Z","2013-11-20T00:00:00.000Z","2013-11-21T00:00:00.000Z","2013-11-22T00:00:00.000Z","2013-11-23T00:00:00.000Z","2013-11-24T00:00:00.000Z","2013-11-25T00:00:00.000Z","2013-11-26T00:00:00.000Z","2013-11-27T00:00:00.000Z","2013-11-28T00:00:00.000Z","2013-11-29T00:00:00.000Z","2013-11-30T00:00:00.000Z","2013-12-01T00:00:00.000Z","2013-12-02T00:00:00.000Z","2013-12-03T00:00:00.000Z","2013-12-04T00:00:00.000Z","2013-12-05T00:00:00.000Z","2013-12-06T00:00:00.000Z","2013-12-07T00:00:00.000Z","2013-12-08T00:00:00.000Z","2013-12-09T00:00:00.000Z","2013-12-10T00:00:00.000Z","2013-12-11T00:00:00.000Z","2013-12-12T00:00:00.000Z","2013-12-13T00:00:00.000Z","2013-12-14T00:00:00.000Z","2013-12-15T00:00:00.000Z","2013-12-16T00:00:00.000Z","2013-12-17T00:00:00.000Z","2013-12-18T00:00:00.000Z","2013-12-19T00:00:00.000Z","2013-12-20T00:00:00.000Z","2013-12-21T00:00:00.000Z","2013-12-22T00:00:00.000Z","2013-12-23T00:00:00.000Z","2013-12-24T00:00:00.000Z","2013-12-25T00:00:00.000Z","2013-12-26T00:00:00.000Z","2013-12-27T00:00:00.000Z","2013-12-28T00:00:00.000Z","2013-12-29T00:00:00.000Z","2013-12-30T00:00:00.000Z","2013-12-31T00:00:00.000Z","2014-01-01T00:00:00.000Z"],[3,4,1,-7,-7,-2,-8,-8,-6,-11,-11,-14,-9,3,-3,16,1,-3,-12,-7,-3,2,-1,-1,3,-1,-9.5,-3,-12,-1,12,0,-9,-6,-3,1,-6,-5,10,-3,-5,7,-3,-6,-2,-3,-4,-12,-9.5,-3,-5,0,3,3,-8,-5,-5,11,-10,-8,-9,-13,-8,-10,-7.5,0,58,-9,-12,-7,3,-7,-7,-7,2.5,0,9,15,-3,-5,-6,3,-1,-1,-11,-11,-13,-14,-17,-10,0,-5,-4,-1,-2,-11,-9,-10,-9,-4,6,19,0,-3,-5,-8,-4,10,14,1,-3,19,13,4,23,11,-14,-11,-10,-13,-14,-13,-7,-15,-15,-12,-16,10,4,-3,2,-10,-12,-15,-12,-5,-6,-15,-3,-3,-6,5,30.5,10,-7,-14,-15,-9,-6,-10,-11,-16,-5,10,-5,-10,-6,5,-8,-9,3,-7,-5,30,4,-11,-9,3,13,4,-11,-11,-12,-8,14.5,15,5,8,14,0,11,44.5,1,2,-13.5,-15,-15,0,9,7,13,4,4,2,-16,-14,-6,-5.5,-6,-3,-1,-1,12,25,5,2,3,-7,7,3,-7,-8,11,2,-2,-4,-5,-8,-2,20,27,-1,-2,2,16,6,-2,-8,-12,-9,-9,-13,-14,10,-6,-16.5,-20,-18,-16,1,-6,-18,-15,-16,-2,-8,-18,-18,-19,-22,-16,-15,-15,-10,16,4,-17,-15,-7,-13,-16,-11,-13,-11,-8,-10,-12,-9,-9,-11,-19,-14,-15,-21,-16,-5,-10,-13,-10,5,-8,-11,-2,2,-13,-9,-7,-10,-7,-4,-2,-4,-5,-5,-4,-1,-4,-3,-5,-13,-7,-7,-9,-5,0,-4,-11,-1,-8,-8,-1,-3,-10,-9,-9,4,-12,-13,-8,-11,-2.5,-4,-6,-9,-5,-1,-1,-6,-8,-3,8,-5,-14,-17,-11.5,-7,-3,-7.5,12,9,1,10,29,35,7,0,-4,16,5.5,1,27,8,0,2,3,5,15,-1,-9,-2,-5,-8,-1,2,1,3]]},"evals":["attrs.interactionModel"],"jsHooks":[]}</script>
+<p><br></p>
+<p>The syntax here is a little different than what we have covered so far. The <code>dygraph</code> function is expecting for the dates to be given as the <code>rownames</code> of the object. We then remove the <code>date</code> variable from the <code>flights_summarized</code> data frame since it is accounted for in the <code>rownames</code>. Lastly, we run the <code>dygraph</code> function on the new data frame that only contains the median arrival delay as a column and then provide the ability to have a selector to zoom in on the interactive plot via <code>dyRangeSelector</code>. (Note that this plot will only be interactive in the HTML version of this book.)</p>
+<!--
+**`paste0("(LC", chap, ".", (lc <- lc + 1), ")")`** Use the interactive linegraph to determine the highest median arrival delay for flights from NYC in 2013.  What date was it and what do you think contributed to it?
 
-<p>These are exciting times in statistics and data science education. (I am predicting this statement will continue to be true regardless of whether you are reading this foreword in 2020 or 2050.) But (isn’t there always a but?), as a statistics educator, it can also feel a bit overwhelming to stay on top of all the new statistical, technological, and pedagogical innovations. I find myself constantly asking, “Am I teaching my students the correct content, with the relevant software, and in the most effective way?”. Before I make all of us feel lost at sea, let me point out how great a life raft I have found in <em>ModernDive</em>. In a sea of intro stats textbooks, <em>ModernDive</em> floats to the top of my list, and let me tell you why. (Note my use of <em>ModernDive</em> here refers to the book in its shortened title version. This also matches up nicely with the <a href="https://moderndive.com/images/logos/hex_blue_text.png">neat hex sticker</a> Drs. Ismay and Kim created for the cover of <em>ModernDive</em>, too.)</p>
-<p><img src="images/ModernDive_heart.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>My favorite aspect of <em>ModernDive</em>, if I must pick a favorite, is that students gain experience with the whole data analysis pipeline (see Figure <a href="preface.html#fig:pipeline-figure">0.2</a>). In particular, <em>ModernDive</em> is one of the few intro stats textbooks that teaches students how to wrangle data. And, while data cleaning may not be as groovy as model building, it’s often a prerequisite step! The world is full of messy data and <em>ModernDive</em> equips students to transform their data via the <code>dplyr</code> package.</p>
-<p>Speaking of <code>dplyr</code>, students of <em>ModernDive</em> are exposed to the <code>tidyverse</code> suite of R packages. Designed with a common structure, <code>tidyverse</code> functions are written to be easy to learn and use. And, since most intro stats students are programming newbies, <em>ModernDive</em> carefully walks the students through each new function it presents and provides frequent reinforcement through the many <em>Learning checks</em> dispersed throughout the chapters.</p>
-<p>Overall, <em>ModernDive</em> includes wise choices for the placement of topics. Starting with data visualization, <em>ModernDive</em> gets students building <code>ggplot2</code> graphs early on and then continues to reinforce important concepts graphically throughout the book. After moving through data wrangling and data importing, modeling plays a prominent role, with two chapters devoted to building regression models and a later chapter on inference for regression. Lastly, statistical inference is presented through a computational lens with calculations done via the <code>infer</code> package.</p>
-<p>I first met Drs. Ismay and Kim while attending their <a href="https://www.causeweb.org/cause/uscots/uscots17/workshop/3">workshop at the 2017 US Conference on Teaching Statistics</a>. They pushed us as participants to put data first and to use computers, instead of math, as the engine for statistical inference. That experience helped me modernize my own intro stats course and introduced me to two really forward-thinking statistics and data science educators. It has been exciting to see <em>ModernDive</em> develop and grow into such a wonderful, timely textbook. I hope you have decided to dive on in!</p>
-<p><br><em>Kelly S. McConville, Reed College</em></br></p>
 
+** ** What are three specific questions that can be more easily answered by looking at Figure 4.6 instead of Figure 4.5?
+
+- Changing the labels of a plot (x-axis, y-axis)
+- stat = "identity" for aggregated data and barplots
+- Changing the theme for ggplots (`ggthemes` package too)
+- Adding `code_folding` and `code_download` to YAML
+- `kable` function from `knitr`
+- Reading in data from files in different formats - Getting Used to R book reference
+- Reshaping the data with `tidyr`
+
+-->
+
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="preface.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="B-appendixB.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="D-appendixD.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -641,7 +1061,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/moderndive/moderndive_book/edit/master/index.Rmd",
+"link": "https://github.com/moderndive/moderndive_book/edit/master/93-appendixC.Rmd",
 "text": "Edit"
 },
 "history": {
