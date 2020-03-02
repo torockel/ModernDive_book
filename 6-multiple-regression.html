@@ -2823,27 +2823,19 @@ Parallel slopes
 </tbody>
 </table>
 <p>Observe how the <span class="math inline">\(R^2\)</span> values are now very different! In other words, since the <em>additional complexity</em> of the interaction model over the parallel slopes model improves our <span class="math inline">\(R^2\)</span> value by a relatively large amount (about <span class="math inline">\(\frac{0.0513}{0.0390} \cdot\)</span> 100% = 32%), it could be argued that the additional complexity is warranted.</p>
-<p>As a final note, we can also use the third of our <code>get_regression()</code> wrapper functions, <code>get_regression_summaries()</code>, to quickly automate the above calculations.</p>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" data-line-number="1"><span class="kw">get_regression_summaries</span>(model_<span class="dv">2</span>_interaction)</a></code></pre></div>
+<p>As a final note, we can also use the third of our <code>get_regression()</code> wrapper functions, <code>get_regression_summaries()</code>, to quickly automate calculating <span class="math inline">\(R^2\)</span> for both the interaction and parallels slopes models for <span class="math inline">\(y\)</span> = average math SAT score for Massachusetts high schools.</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" data-line-number="1"><span class="co"># R-squared for interaction model:</span></a>
+<a class="sourceLine" id="cb211-2" data-line-number="2"><span class="kw">get_regression_summaries</span>(model_<span class="dv">2</span>_interaction)</a></code></pre></div>
 <pre><code># A tibble: 1 x 8
   r_squared adj_r_squared   mse  rmse sigma statistic p_value    df
       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
 1     0.699         0.694 1107.  33.3  33.6      151.       0     6</code></pre>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="kw">get_regression_points</span>(model_<span class="dv">2</span>_parallel_slopes)</a></code></pre></div>
-<pre><code># A tibble: 332 x 6
-      ID average_sat_math perc_disadvan size   average_sat_math_hat residual
-   &lt;int&gt;            &lt;dbl&gt;         &lt;dbl&gt; &lt;fct&gt;                 &lt;dbl&gt;    &lt;dbl&gt;
- 1     1              516          21.5 medium                 517.   -0.567
- 2     2              514          22.7 large                  519.   -4.79 
- 3     3              534          14.6 large                  541.   -7.28 
- 4     4              581           6.3 large                  564.   16.7  
- 5     5              592          10.3 large                  553.   38.8  
- 6     6              576          10.3 large                  553.   22.8  
- 7     7              504          25.6 large                  511.   -6.73 
- 8     8              505          15.2 large                  540.  -34.6  
- 9     9              481          23.8 small                  522.  -41.1  
-10    10              513          25.5 large                  511.    1.99 
-# … with 322 more rows</code></pre>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="co"># R-squared for parallel slopes model:</span></a>
+<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="kw">get_regression_summaries</span>(model_<span class="dv">2</span>_parallel_slopes)</a></code></pre></div>
+<pre><code># A tibble: 1 x 8
+  r_squared adj_r_squared   mse  rmse sigma statistic p_value    df
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1     0.699         0.696 1109.  33.3  33.5      254.       0     4</code></pre>
 </div>
 <div id="correlationcoefficient2" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Correlation coefficient</h3>

@@ -596,8 +596,10 @@ bind_rows(
 
 
 ## -----------------------------------------------------------------------------
+# R-squared for interaction model:
 get_regression_summaries(model_2_interaction)
-get_regression_points(model_2_parallel_slopes)
+# R-squared for parallel slopes model:
+get_regression_summaries(model_2_parallel_slopes)
 
 
 ## ---- eval=FALSE--------------------------------------------------------------
