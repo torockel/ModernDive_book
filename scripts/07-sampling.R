@@ -19,6 +19,15 @@ library(knitr)
 library(kableExtra)
 library(patchwork)
 
+# Dynamic coding of summary statistics for bowl i.e. avoid hard-coding any values
+# wherever possible
+num_balls <- nrow(bowl)
+num_red <- bowl %>% 
+  summarize(red = sum(color == "red")) %>%
+  pull(red)
+prop_red <- num_red/num_balls
+percent_red <- (100*prop_red) %>% str_c("%")
+
 
 
 
@@ -367,6 +376,30 @@ comparing_n_table  %>%
 
 
 
+## -----------------------------------------------------------------------------
+bowl
+
+
+## -----------------------------------------------------------------------------
+bowl %>% 
+  summarize(red = sum(color == "red")) 
+
+
+## ---- eval = FALSE------------------------------------------------------------
+## virtual_shovel <- bowl %>%
+##   rep_sample_n(size = 50)
+## virtual_shovel
+
+## ---- echo = FALSE------------------------------------------------------------
+virtual_shovel
+
+
+## -----------------------------------------------------------------------------
+virtual_shovel %>% 
+  summarize(num_red = sum(color == "red")) %>% 
+  mutate(prop_red = num_red / 50)
+
+
 
 
 
@@ -442,16 +475,7 @@ comparing_n_table  %>%
 
 
 
-## -----------------------------------------------------------------------------
-bowl %>% 
-  summarize(sum_red = sum(color == "red"), 
-            sum_not_red = sum(color != "red"))
-
-
 ## ----comparing-sampling-distributions-3, echo=FALSE, fig.cap="Three sampling distributions with population proportion $p$ marked by vertical line."----
-p <- bowl %>% 
-  summarize(mean(color == "red")) %>% 
-  pull()
 samp_distn_compare <- virtual_prop %>% 
   mutate(
     n = str_c("n = ", n),
@@ -464,7 +488,7 @@ samp_distn_compare <- virtual_prop %>%
        title = expression(paste("Sampling distributions of ", hat(p), 
                                 " based on n = 25, 50, 100.")) ) +
   facet_wrap(~ n) +
-  geom_vline(xintercept = p, col = "red", size = 1)
+  geom_vline(xintercept = prop_red, col = "red", size = 1)
 
 if(knitr::is_latex_output()){
   samp_distn_compare  +
@@ -510,6 +534,8 @@ comparing_n_table  %>%
 
 
 
+
+
 ## ----table-ch8, echo=FALSE, message=FALSE-------------------------------------
 # The following Google Doc is published to CSV and loaded using read_csv():
 # https://docs.google.com/spreadsheets/d/1QkOpnBGqOXGyJjwqx1T2O5G5D72wWGfWlPyufOgtkk4/edit#gid=0
@@ -537,8 +563,6 @@ sampling_scenarios %>%
   column_spec(3, width = "0.8in") %>%
   column_spec(4, width = "1.5in") %>% 
   column_spec(5, width = "0.6in")
-
-
 
 
 ## ----echo=FALSE, results="asis"-----------------------------------------------
