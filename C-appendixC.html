@@ -24,7 +24,7 @@
 <meta name="author" content="Chester Ismay and Albert Y. Kim   Foreword by Kelly S. McConville" />
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -702,7 +702,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb606"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb606-1" data-line-number="1"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb606-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb606-3" data-line-number="3"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span>)</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-553-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-552-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>Say we want to reorder the categorical variable <code>type</code> so that the bars show in a different order. We can reorder the bars by manually defining the order of the <code>levels</code> in the <code>factor()</code> command:</p>
 <div class="sourceCode" id="cb607"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb607-1" data-line-number="1">type_levels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rom comedy&quot;</span>, <span class="st">&quot;action&quot;</span>, <span class="st">&quot;drama&quot;</span>, <span class="st">&quot;animated&quot;</span>, <span class="st">&quot;comedy&quot;</span>, <span class="st">&quot;fantasy&quot;</span>)</a>
 <a class="sourceLine" id="cb607-2" data-line-number="2"></a>
@@ -712,7 +712,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb607-6" data-line-number="6"><span class="kw">ggplot</span>(revenue_by_type, <span class="kw">aes</span>(<span class="dt">x =</span> type, <span class="dt">y =</span> total_revenue)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb607-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb607-8" data-line-number="8"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span>)</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-554-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-553-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>Or if you want to reorder <code>type</code> in ascending order of <code>total_revenue</code>, we use <code>reorder()</code></p>
 <div class="sourceCode" id="cb608"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb608-1" data-line-number="1">revenue_by_type &lt;-<span class="st"> </span>revenue_by_type <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb608-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="kw">reorder</span>(type, total_revenue))</a>
@@ -722,7 +722,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb608-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(</a>
 <a class="sourceLine" id="cb608-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span></a>
 <a class="sourceLine" id="cb608-8" data-line-number="8">  )</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-555-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-554-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>Or if you want to reorder <code>type</code> in descending order of <code>total_revenue</code>, just put
 a <code>-</code> sign in front of <code>-total_revenue</code> in <code>reorder()</code>:</p>
 <div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb609-1" data-line-number="1">revenue_by_type &lt;-<span class="st"> </span>revenue_by_type <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -733,7 +733,7 @@ a <code>-</code> sign in front of <code>-total_revenue</code> in <code>reorder()
 <a class="sourceLine" id="cb609-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(</a>
 <a class="sourceLine" id="cb609-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;Movie genre&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Total boxoffice revenue (in millions of $)&quot;</span></a>
 <a class="sourceLine" id="cb609-8" data-line-number="8">  )</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-556-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-555-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>For more advanced categorical variable (i.e. factor) manipulations, check out
 the <a href="https://forcats.tidyverse.org/" target="_blank"><code>forcats</code> package</a>. Note: <code>forcats</code> is an anagram of <code>factors</code></p>
 <p><img src="https://github.com/tidyverse/forcats/raw/master/man/figures/logo.png" style="width:20.0%" /></p>
@@ -746,7 +746,7 @@ the <a href="https://forcats.tidyverse.org/" target="_blank"><code>forcats</code
 <a class="sourceLine" id="cb610-4" data-line-number="4"><span class="kw">ggplot</span>(<span class="dt">data =</span> movies_ex, <span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> revenue)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb610-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb610-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;rating&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Revenue in $&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;Profits for different movie ratings&quot;</span>)</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-557-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-556-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 <p>Google “ggplot2 axis scale dollars” and click on the <a href="http://www.sthda.com/english/wiki/ggplot2-axis-scales-and-transformations">first link</a> and search for the word “dollars”. You’ll find:</p>
 <div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb611-1" data-line-number="1"><span class="co"># Don&#39;t forget to load the scales package first!</span></a>
 <a class="sourceLine" id="cb611-2" data-line-number="2"><span class="kw">library</span>(scales)</a>
@@ -755,7 +755,7 @@ the <a href="https://forcats.tidyverse.org/" target="_blank"><code>forcats</code
 <a class="sourceLine" id="cb611-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb611-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;rating&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Revenue in $&quot;</span>, <span class="dt">title =</span> <span class="st">&quot;Profits for different movie ratings&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb611-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> dollar)</a></code></pre></div>
-<p><img src="ModernDive_files/figure-html/unnamed-chunk-558-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
+<p><img src="ModernDive_files/figure-html/unnamed-chunk-557-1.png" width="\textwidth" style="display: block; margin: auto;" /></p>
 </div>
 <div id="appendix-changing-values" class="section level3">
 <h3><span class="header-section-number">C.1.4</span> Changing values inside cells</h3>

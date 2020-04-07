@@ -24,7 +24,7 @@
 <meta name="author" content="Chester Ismay and Albert Y. Kim   Foreword by Kelly S. McConville" />
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -667,8 +667,9 @@ FIGURE 8.3: Distribution of year on 50 US pennies.
 </p>
 </div>
 <p>Observe a slightly left-skewed  distribution, since most pennies fall between 1980 and 2010 with only a few pennies older than 1970. What is the average year for the 50 sampled pennies? Eyeballing the histogram it appears to be around 1990. Let’s now compute this value exactly using our data wrangling tools from Chapter <a href="3-wrangling.html#wrangling">3</a>.</p>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb268-1" data-line-number="1">pennies_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb268-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_year =</span> <span class="kw">mean</span>(year))</a></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb268-1" data-line-number="1">x_bar &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb268-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_year =</span> <span class="kw">mean</span>(year))</a>
+<a class="sourceLine" id="cb268-3" data-line-number="3">x_bar</a></code></pre></div>
 <pre><code># A tibble: 1 x 1
   mean_year
       &lt;dbl&gt;
@@ -1383,8 +1384,9 @@ FIGURE 8.24: Percentile method 95% confidence interval shaded corresponding to p
 <p>So in our case, 95% of values of the bootstrap distribution will lie within <span class="math inline">\(\pm 1.96\)</span> standard errors of <span class="math inline">\(\overline{x}\)</span>. Thus, a 95% confidence interval is</p>
 <p><span class="math display">\[\overline{x} \pm 1.96 \cdot SE = (\overline{x} - 1.96 \cdot SE, \, \overline{x} + 1.96 \cdot SE).\]</span></p>
 <p>Computation of the 95% confidence interval can once again be done by piping the <code>bootstrap_distribution</code> data frame we created into the <code>get_confidence_interval()</code> function. However, this time we set the first <code>type</code> argument to be <code>&quot;se&quot;</code>. Second, we must specify the <code>point_estimate</code> argument in order to set the center of the confidence interval. We set this to be the sample mean of the original sample of 50 pennies of 1995.44.</p>
-<!-- point_estimate = 1995.44 -->
-<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb318-1" data-line-number="1">x_bar</a></code></pre></div>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb318-1" data-line-number="1">x_bar &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb318-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_year =</span> <span class="kw">mean</span>(year))</a>
+<a class="sourceLine" id="cb318-3" data-line-number="3">x_bar</a></code></pre></div>
 <pre><code># A tibble: 1 x 1
   mean_year
       &lt;dbl&gt;
