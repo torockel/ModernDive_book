@@ -24,7 +24,7 @@
 <meta name="author" content="Chester Ismay and Albert Y. Kim   Foreword by Kelly S. McConville" />
 
 
-<meta name="date" content="2020-04-07" />
+<meta name="date" content="2020-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1746,7 +1746,7 @@ FIGURE 9.20: Examples of t-distributions and the z curve.
 <div id="null-distribution" class="section level4 unnumbered">
 <h4>Null distribution</h4>
 <p>Let’s revisit the null distribution for the test statistic <span class="math inline">\(\bar{x}_a - \bar{x}_r\)</span> we constructed in Section <a href="9-hypothesis-testing.html#ht-case-study">9.5</a>. Let’s visualize this in the left-hand plot of Figure <a href="9-hypothesis-testing.html#fig:comparing-diff-means-t-stat">9.21</a>.</p>
-<div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb429-1" data-line-number="1"><span class="co"># Construct null distribution of xbar_a - xbar_m:</span></a>
+<div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb429-1" data-line-number="1"><span class="co"># Construct null distribution of xbar_a - xbar_r:</span></a>
 <a class="sourceLine" id="cb429-2" data-line-number="2">null_distribution_movies &lt;-<span class="st"> </span>movies_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb429-3" data-line-number="3"><span class="st">  </span><span class="kw">specify</span>(<span class="dt">formula =</span> rating <span class="op">~</span><span class="st"> </span>genre) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb429-4" data-line-number="4"><span class="st">  </span><span class="kw">hypothesize</span>(<span class="dt">null =</span> <span class="st">&quot;independence&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
